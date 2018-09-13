@@ -1,0 +1,17 @@
+version: 2
+
+workflows:
+  version: 2
+  flow:
+    jobs:
+      - test
+
+jobs:
+  test:
+    docker:
+      - image: pbzweihander/circleci-ocaml
+    steps:
+      - checkout
+      - run: |
+          make configure
+          make test

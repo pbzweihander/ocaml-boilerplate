@@ -1,0 +1,42 @@
+OASISFormat:   0.4
+Name:          OCaml Boilerplate
+Version:       0.1.0
+Synopsis:      A template for OCaml project
+Authors:       pbzweihander
+License:       MIT
+Plugins:       META (0.4)
+BuildTools:    ocamlbuild
+AlphaFeatures: ocamlbuild_more_args
+
+PostCleanCommand:
+  $rm -f `find . -name "*~"`
+
+PostDistcleanCommand:
+  $rm -f _tags myocamlbuild.ml setup.ml setup.data lib/api.odocl
+  $rm -f `find lib -name "*.mllib" -or -name "*.mldylib"`
+  $rm -f `find lib -name "META" -or -name "*.mlpack"`
+  $rm -rf doc/api `find -name "*.docdir"`
+
+
+Library lib
+  Path:           lib
+  Modules:        Lib
+  CompiledObject: best
+
+Library some_lib
+  Path:           lib
+  FindLibName:    some_lib
+  FindLibParent:  lib
+  Modules:        Some_lib
+  CompiledObject: best
+Executable test_some_lib
+  Path:           test
+  MainIs:         test_some_lib.ml
+  Install:        false
+  Build$:         flag(tests)
+  BuildDepends:   lib.some_lib, oUnit (>= 2.0)
+  CompiledObject: best
+Test test_some_lib
+  WorkingDirectory: test
+  Run$:             flag(tests)
+  Command:          $test_some_lib
